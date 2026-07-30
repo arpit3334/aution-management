@@ -16,7 +16,6 @@ export function Sidebar() {
 
   const NAV_ITEMS = [
     { label: 'Dashboard', href: '/', icon: LayoutGrid, count: 2 },
-    // Use dedicated Next.js routes
     { label: 'Auction', href: '/create', icon: PlusCircle }, 
     { label: 'Live auction', href: '/live-auction-room', icon: Radio, badge: 'Live' },
     { label: 'Compare bids', href: '/ebid-list', icon: GitCompare }, 

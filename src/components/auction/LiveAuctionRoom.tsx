@@ -975,10 +975,6 @@ export default function LiveAuctionRoom({ onNavigate }: Props) {
       <div style={{ maxWidth: '100%' }}>
         {/* Header */}
         <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 20 }}>
-          <button onClick={() => onNavigate('ebid-list')}
-            style={{ padding: 7, background: '#fff', border: '1px solid #e2e8f0', borderRadius: 8, cursor: 'pointer', display: 'flex', alignItems: 'center', color: '#6b7280' }}>
-            <ArrowLeft size={15} />
-          </button>
           <div>
             <h1 style={{ fontSize: 18, fontWeight: 600, color: '#111827', margin: 0 }}>Live Auction Room</h1>
             <p style={{ fontSize: 13, color: '#6b7280', margin: '2px 0 0' }}>Real-time monitoring and auction control</p>

@@ -61,7 +61,6 @@ export function AuctionCreate({ onNavigate }: { onNavigate: (v: string, d?: any)
     <div className="min-h-screen bg-slate-50 p-6">
       <div className="max-w-4xl mx-auto">
         <div className="flex items-center gap-3 mb-6">
-          <button onClick={() => onNavigate('list')} className="p-1.5 text-slate-400 hover:text-slate-700 hover:bg-slate-100 rounded-lg transition-colors"><ArrowLeft className="w-5 h-5" /></button>
           <div><h1 className="text-xl font-semibold text-slate-900">Create Auction</h1><p className="text-sm text-slate-500 mt-0.5">Link an RFQ and configure auction parameters</p></div>
         </div>
 

@@ -158,7 +158,6 @@ export function SubmissionDetail({ data, onNavigate }: { data: { bid: eBid; subm
       <div className="max-w-4xl mx-auto">
         <div className="flex items-start justify-between mb-6">
           <div className="flex items-start gap-3">
-            <button onClick={() => onNavigate('detail', bid)} className="mt-0.5 p-1.5 text-slate-400 hover:text-slate-700 hover:bg-slate-100 rounded-lg"><ArrowLeft className="w-5 h-5" /></button>
             <div><h1 className="text-xl font-semibold text-slate-900">Submission — {sub.submissionRef}</h1><p className="text-sm text-slate-500">{bid.eBidNumber} · {bid.title}</p></div>
           </div>
           <button className="flex items-center gap-1.5 px-3 py-2 text-sm border border-slate-300 text-slate-700 rounded-lg hover:bg-slate-50"><Download className="w-4 h-4" /> Export</button>

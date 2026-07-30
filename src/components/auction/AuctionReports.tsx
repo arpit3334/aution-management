@@ -37,10 +37,6 @@ export default function AuctionReports({ onNavigate }: Props) {
         {/* Header */}
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 24 }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-            <button onClick={() => onNavigate('ebid-list')}
-              style={{ padding: 7, background: '#fff', border: '1px solid #e2e8f0', borderRadius: 8, cursor: 'pointer', display: 'flex', alignItems: 'center', color: '#6b7280' }}>
-              <ArrowLeft size={15} />
-            </button>
             <div>
               <h1 style={{ fontSize: 18, fontWeight: 600, color: '#111827', margin: 0 }}>Auction Reports</h1>
               <p style={{ fontSize: 13, color: '#6b7280', margin: '2px 0 0' }}>Download and analyze auction data</p>

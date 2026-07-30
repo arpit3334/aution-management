@@ -40,7 +40,6 @@ export function AuctionDetail({ bid: initBid, onNavigate }: { bid: eBid; onNavig
       <div className="max-w-screen-xl mx-auto">
         <div className="flex items-start justify-between mb-5">
           <div className="flex items-start gap-3">
-            <button onClick={() => onNavigate('list')} className="mt-0.5 p-1.5 text-slate-400 hover:text-slate-700 hover:bg-slate-100 rounded-lg transition-colors"><ArrowLeft className="w-5 h-5" /></button>
             <div><h1 className="text-xl font-semibold text-slate-900">{bid.title}</h1><p className="text-sm text-slate-500 mt-0.5">{bid.eBidNumber} · {bid.linkedRFQNumber}</p></div>
           </div>
           <div className="flex gap-2">

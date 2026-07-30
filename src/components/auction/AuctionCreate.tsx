@@ -7,7 +7,7 @@ import {
   AlertCircle, Star, Download, Info, Hash, Tag, Briefcase, Eye,
   MoreHorizontal, Filter, RefreshCw, ShieldCheck, Paperclip,
   ChevronDown, ChevronUp, Edit2, XCircle, IndianRupee, Shield,
-  Activity
+  Activity, Mail, TrendingUp, Timer
 } from 'lucide-react';
 import { eBid } from '@/types/auction';
 import { FormField, inputCls, lockedCls, fmtINR } from '@/components/ui/shared';
@@ -23,7 +23,7 @@ export function AuctionCreate({ onNavigate }: { onNavigate: (v: string, d?: any)
   const [selectedRFQ, setSelectedRFQ] = useState<typeof AVAILABLE_RFQS[0] | null>(null);
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
-  const [bidType, setBidType] = useState<'Sealed' | 'Open' | 'Reverse Auction'>('Sealed');
+  const [bidType, setBidType] = useState<string>('Sealed');
   const [submissionOpen, setSubmissionOpen] = useState('');
   const [submissionDeadline, setSubmissionDeadline] = useState('');
   const [bidOpeningDate, setBidOpeningDate] = useState('');
@@ -46,9 +46,13 @@ export function AuctionCreate({ onNavigate }: { onNavigate: (v: string, d?: any)
   const filteredVendors = AVAILABLE_VENDORS.filter(v => v.name.toLowerCase().includes(vendorSearch.toLowerCase()));
 
   const BID_TYPE_OPTIONS = [
-    { type: 'Sealed' as const, icon: <Lock className="w-5 h-5" />, desc: 'Vendors submit one confidential bid; all revealed simultaneously after deadline.' },
-    { type: 'Open' as const, icon: <Eye className="w-5 h-5" />, desc: 'All bids visible to participating vendors in real time.' },
-    { type: 'Reverse Auction' as const, icon: <TrendingDown className="w-5 h-5" />, desc: 'Vendors compete by lowering price in successive rounds.' },
+    { type: 'Sealed', icon: <Lock className="w-5 h-5" />, desc: 'Vendors submit one confidential bid; all revealed simultaneously after deadline.' },
+    { type: 'Open', icon: <Eye className="w-5 h-5" />, desc: 'All bids visible to participating vendors in real time.' },
+    { type: 'Reverse Auction', icon: <TrendingDown className="w-5 h-5" />, desc: 'Vendors compete by lowering price in successive rounds.' },
+    { type: 'Two-Envelope', icon: <Mail className="w-5 h-5" />, desc: 'Technical opens first, commercial only after qualification.' },
+    { type: 'Multi-Attribute', icon: <BarChart2 className="w-5 h-5" />, desc: 'Weighted scoring across price, quality, risk, ESG.' },
+    { type: 'English Auction', icon: <TrendingUp className="w-5 h-5" />, desc: 'Price rises, bidders outbid each other, highest wins.' },
+    { type: 'Dutch Auction', icon: <Timer className="w-5 h-5" />, desc: 'Price drops automatically, first to accept wins.' },
   ];
 
   const handlePublish = () => { setTimeout(() => setPublished(true), 1200); };
@@ -96,7 +100,7 @@ export function AuctionCreate({ onNavigate }: { onNavigate: (v: string, d?: any)
               )}
               <FormField label="Auction Title" required><input type="text" className={inputCls} value={title} onChange={e => setTitle(e.target.value)} placeholder="e.g. IT Hardware Supply – Q1 2025" /></FormField>
               <FormField label="Auction Type" required>
-                <div className="grid grid-cols-3 gap-3">
+                <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
                   {BID_TYPE_OPTIONS.map(opt => (
                     <button key={opt.type} onClick={() => setBidType(opt.type)} className={`p-4 rounded-xl border-2 text-left transition-all ${bidType === opt.type ? 'border-slate-900 bg-slate-50' : 'border-slate-200 hover:border-slate-300'}`}>
                       <div className={`w-9 h-9 rounded-lg flex items-center justify-center mb-3 ${bidType === opt.type ? 'bg-slate-900 text-white' : 'bg-slate-100 text-slate-500'}`}>{opt.icon}</div>

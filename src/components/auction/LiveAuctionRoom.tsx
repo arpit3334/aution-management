@@ -2,13 +2,14 @@ import { useState } from 'react';
 import {
   Clock, Zap, ArrowLeft, CheckCircle, Shield, AlertCircle,
   Send, Award, Lock, GitMerge, MessageSquare, Flag, Layers,
+  Mail, BarChart2, TrendingUp, Timer
 } from 'lucide-react';
 
 const fmtINR = (v: number) =>
   new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR', minimumFractionDigits: 0 }).format(v);
 
 interface Props { onNavigate: (view: string, data?: any) => void; data?: any; }
-type RoomTab = 'multi-round' | 'sealed-bid' | 'hybrid' | 'negotiation' | 'bafo';
+type RoomTab = 'multi-round' | 'sealed-bid' | 'hybrid' | 'negotiation' | 'bafo' | 'two-envelope' | 'multi-attribute' | 'english' | 'dutch';
 
 const ROOM_TABS: { id: RoomTab; label: string; icon: any }[] = [
   { id: 'multi-round', label: 'Multi-Round',  icon: Layers },
@@ -16,6 +17,10 @@ const ROOM_TABS: { id: RoomTab; label: string; icon: any }[] = [
   { id: 'hybrid',      label: 'Hybrid',       icon: GitMerge },
   { id: 'negotiation', label: 'Negotiation',  icon: MessageSquare },
   { id: 'bafo',        label: 'BAFO',         icon: Flag },
+  { id: 'two-envelope',label: 'Two-Envelope', icon: Mail },
+  { id: 'multi-attribute',label: 'Multi-Attribute', icon: BarChart2 },
+  { id: 'english',     label: 'English',      icon: TrendingUp },
+  { id: 'dutch',       label: 'Dutch',        icon: Timer },
 ];
 
 /* ── Shared style primitives ───────────────────────────────────────────── */
@@ -567,6 +572,399 @@ function BafoRoom() {
 }
 
 /* ══════════════════════════════════════════════════════════════════════ */
+/* ══════════════════════════════════════════════════════════════════════ */
+/*  Two-Envelope Room                                                     */
+/* ══════════════════════════════════════════════════════════════════════ */
+function TwoEnvelopeRoom() {
+  const [tab, setTab] = useState<'phase1' | 'phase2'>('phase1');
+  const rows = [
+    { supplier: 'SAP SE',         score: 88, status: 'Qualified',    evaluator: 'Mariam Al-Dosari' },
+    { supplier: 'Oracle Arabia',  score: 84, status: 'Qualified',    evaluator: 'Mariam Al-Dosari' },
+    { supplier: 'Microsoft MENA', score: 79, status: 'Qualified',    evaluator: 'Abdulaziz Alrashed' },
+    { supplier: 'Infor Gulf',     score: 74, status: 'Qualified',    evaluator: 'Abdulaziz Alrashed' },
+    { supplier: 'IFS Arabia',     score: 63, status: 'Disqualified', evaluator: 'Sourabh Jain' },
+    { supplier: 'Epicor KSA',     score: 58, status: 'Disqualified', evaluator: 'Sourabh Jain' },
+    { supplier: 'Unit4 Arabia',   score: -1, status: 'Pending',      evaluator: '—' },
+  ];
+
+  return (
+    <div>
+      <div style={{ background: '#1e293b', borderRadius: 12, overflow: 'hidden', marginBottom: 14 }}>
+        <div style={{ padding: '16px 20px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+          <div>
+            <p style={{ fontSize: 14.5, fontWeight: 600, color: '#fff', margin: '0 0 3px' }}>AUC-2025-0050 · Enterprise ERP System Replacement</p>
+            <p style={{ fontSize: 12, color: '#cbd5e1', margin: 0 }}>Two-envelope · Phase 1 of 2 · Technical envelopes open · 7 suppliers submitted</p>
+          </div>
+          <div style={{ textAlign: 'right', flexShrink: 0 }}>
+            <p style={{ fontSize: 26, fontWeight: 300, fontFamily: 'monospace', color: '#fff', margin: 0 }}>—</p>
+            <p style={{ fontSize: 10.5, color: '#cbd5e1', margin: '3px 0 0', letterSpacing: '.03em' }}>EVALUATION IN PROGRESS</p>
+          </div>
+        </div>
+      </div>
+
+      <div style={{ display: 'flex', borderBottom: '1px solid #e2e8f0', marginBottom: 16 }}>
+        <button onClick={() => setTab('phase1')}
+          style={{ padding: '10px 16px', fontSize: 13, fontWeight: tab === 'phase1' ? 600 : 500, color: tab === 'phase1' ? '#111827' : '#6b7280', borderBottom: tab === 'phase1' ? '2px solid #111827' : '2px solid transparent', background: 'none', borderTop: 'none', borderLeft: 'none', borderRight: 'none', cursor: 'pointer' }}>
+          Phase 1 · Technical opening (live)
+        </button>
+        <button onClick={() => alert('Commercial envelopes are locked until technical evaluation is complete.')}
+          style={{ padding: '10px 16px', fontSize: 13, fontWeight: tab === 'phase2' ? 600 : 500, color: tab === 'phase2' ? '#111827' : '#6b7280', borderBottom: tab === 'phase2' ? '2px solid #111827' : '2px solid transparent', background: 'none', borderTop: 'none', borderLeft: 'none', borderRight: 'none', cursor: 'pointer' }}>
+          Phase 2 · Commercial opening (locked)
+        </button>
+      </div>
+
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 320px', gap: 16 }}>
+        <div>
+          <SectionCard title="Technical evaluation" badge={<Chip status="Pending" />}>
+            <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 12 }}>
+              <thead><tr><th style={th}>Supplier</th><th style={th}>Technical score</th><th style={th}>Pass mark</th><th style={th}>Status</th><th style={th}>Evaluator</th></tr></thead>
+              <tbody>
+                {rows.map(row => (
+                  <tr key={row.supplier} style={{ borderTop: '1px solid #f1f5f9', background: row.score === -1 ? '#fffbeb' : undefined }}>
+                    <td style={{ padding: '11px 14px', fontWeight: 500, color: '#111827' }}>{row.supplier}</td>
+                    <td style={{ padding: '11px 14px', fontFamily: 'monospace' }}>{row.score === -1 ? '—' : row.score} / 100</td>
+                    <td style={{ padding: '11px 14px', fontFamily: 'monospace' }}>70</td>
+                    <td style={{ padding: '11px 14px' }}>
+                      <Chip status={row.status === 'Qualified' ? 'Active' : row.status === 'Disqualified' ? 'Idle' : 'Pending'} />
+                    </td>
+                    <td style={{ padding: '11px 14px' }}>{row.evaluator}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </SectionCard>
+          <div style={{ ...card(), background: '#eff6ff', borderColor: '#dbeafe', marginTop: 14 }}>
+            <div style={{ padding: 16, display: 'flex', alignItems: 'center', gap: 12 }}>
+              <Shield size={20} color="#2563eb" style={{ flexShrink: 0 }} />
+              <p style={{ fontSize: 12.5, color: '#1e40af', margin: 0 }}><b>Commercial envelopes unlock</b> once all technical scores are entered and the evaluation lead approves. Disqualified suppliers will be notified before commercial bids are opened.</p>
+            </div>
+          </div>
+        </div>
+
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+          <SectionCard title="Opening summary">
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 10, padding: 16 }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <span style={{ fontSize: 11, color: '#6b7280', textTransform: 'uppercase', letterSpacing: '.4px' }}>Submissions received</span>
+                <span style={{ fontSize: 13.5, fontWeight: 600, color: '#111827' }}>7 of 7 invited</span>
+              </div>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <span style={{ fontSize: 11, color: '#6b7280', textTransform: 'uppercase', letterSpacing: '.4px' }}>Technically qualified</span>
+                <span style={{ fontSize: 13.5, fontWeight: 600, color: '#16a34a' }}>4 suppliers</span>
+              </div>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <span style={{ fontSize: 11, color: '#6b7280', textTransform: 'uppercase', letterSpacing: '.4px' }}>Disqualified</span>
+                <span style={{ fontSize: 13.5, fontWeight: 600, color: '#dc2626' }}>2 suppliers</span>
+              </div>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <span style={{ fontSize: 11, color: '#6b7280', textTransform: 'uppercase', letterSpacing: '.4px' }}>Pending score</span>
+                <span style={{ fontSize: 13.5, fontWeight: 600, color: '#d97706' }}>1 supplier</span>
+              </div>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <span style={{ fontSize: 11, color: '#6b7280', textTransform: 'uppercase', letterSpacing: '.4px' }}>Commercial opens</span>
+                <span style={{ fontSize: 13.5, fontWeight: 600, color: '#111827' }}>After approval</span>
+              </div>
+            </div>
+          </SectionCard>
+          <SectionCard title="Evaluation actions">
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 8, padding: 16 }}>
+              <button style={{ padding: '8px 16px', background: '#fff', color: '#111827', border: '1px solid #e2e8f0', borderRadius: 8, fontSize: 14, fontWeight: 500, cursor: 'pointer' }}>Add evaluator score</button>
+              <button style={{ padding: '8px 16px', background: '#fff', color: '#111827', border: '1px solid #e2e8f0', borderRadius: 8, fontSize: 14, fontWeight: 500, cursor: 'pointer' }}>View evaluation criteria</button>
+              <button onClick={() => alert('All 7 scores must be entered before commercial envelopes can be unlocked.')} style={{ padding: '8px 16px', background: '#111827', color: '#fff', border: 'none', borderRadius: 8, fontSize: 14, fontWeight: 500, cursor: 'pointer' }}>Approve and unlock commercial</button>
+            </div>
+          </SectionCard>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/* ══════════════════════════════════════════════════════════════════════ */
+/*  Multi-Attribute Room                                                  */
+/* ══════════════════════════════════════════════════════════════════════ */
+function MultiAttributeRoom() {
+  const rows = [
+    { rank: 1, supplier: 'Accenture Gulf',   tech: 88, comm: 82, risk: 90, supp: 85, esg: 78, overall: 86.3, time: '14:43:52' },
+    { rank: 2, supplier: 'Deloitte MENA',    tech: 92, comm: 76, risk: 88, supp: 90, esg: 92, overall: 85.8, time: '14:41:30' },
+    { rank: 3, supplier: 'McKinsey Arabia',  tech: 95, comm: 68, risk: 92, supp: 88, esg: 80, overall: 84.2, time: '14:38:04' },
+    { rank: 4, supplier: 'PwC Gulf',         tech: 82, comm: 80, risk: 85, supp: 82, esg: 88, overall: 82.6, time: '14:35:19' },
+  ];
+
+  return (
+    <div>
+      <div style={{ background: '#1e3a5f', borderRadius: 12, overflow: 'hidden', marginBottom: 14 }}>
+        <div style={{ padding: '16px 20px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+          <div>
+            <p style={{ fontSize: 14.5, fontWeight: 600, color: '#fff', margin: '0 0 3px' }}>AUC-2025-0052 · Digital Transformation Consulting — Phase 3</p>
+            <p style={{ fontSize: 12, color: '#93c5fd', margin: 0 }}>Multi-attribute auction · Technical 45% · Commercial 30% · Risk 10% · Support 10% · ESG 5%</p>
+          </div>
+          <div style={{ textAlign: 'right', flexShrink: 0 }}>
+            <p style={{ fontSize: 26, fontWeight: 300, fontFamily: 'monospace', color: '#fff', margin: 0 }}>00:38:22</p>
+            <p style={{ fontSize: 10.5, color: '#fff', margin: '3px 0 0', letterSpacing: '.03em' }}>REMAINING TIME</p>
+          </div>
+        </div>
+      </div>
+
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 300px', gap: 16 }}>
+        <div>
+          <SectionCard title="Weighted score leaderboard">
+            <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 12 }}>
+              <thead>
+                <tr>
+                  <th style={th}>Rank</th>
+                  <th style={th}>Supplier</th>
+                  <th style={{ ...th, color: '#3b82f6' }}>Technical<br/><span style={{ fontWeight: 400, fontSize: 10 }}>45%</span></th>
+                  <th style={{ ...th, color: '#10b981' }}>Commercial<br/><span style={{ fontWeight: 400, fontSize: 10 }}>30%</span></th>
+                  <th style={{ ...th, color: '#ef4444' }}>Risk<br/><span style={{ fontWeight: 400, fontSize: 10 }}>10%</span></th>
+                  <th style={{ ...th, color: '#eab308' }}>Support<br/><span style={{ fontWeight: 400, fontSize: 10 }}>10%</span></th>
+                  <th style={{ ...th, color: '#84cc16' }}>ESG<br/><span style={{ fontWeight: 400, fontSize: 10 }}>5%</span></th>
+                  <th style={th}>Overall</th>
+                  <th style={th}>Last bid</th>
+                </tr>
+              </thead>
+              <tbody>
+                {rows.map(row => (
+                  <tr key={row.rank} style={{ borderTop: '1px solid #f1f5f9', background: row.rank === 1 ? '#fffbeb' : undefined }}>
+                    <td style={{ padding: '11px 14px' }}>
+                      <div style={{ width: 20, height: 20, borderRadius: '50%', background: row.rank === 1 ? '#f59e0b' : row.rank === 2 ? '#94a3b8' : row.rank === 3 ? '#cd7f32' : '#e2e8f0', color: row.rank === 4 ? '#475569' : '#fff', fontSize: 10.5, fontWeight: 600, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                        {row.rank}
+                      </div>
+                    </td>
+                    <td style={{ padding: '11px 14px', fontWeight: 500, color: '#111827' }}>{row.supplier}</td>
+                    <td style={{ padding: '11px 14px', fontFamily: 'monospace' }}>{row.tech}</td>
+                    <td style={{ padding: '11px 14px', fontFamily: 'monospace' }}>{row.comm} {row.rank === 1 && <span style={{ fontSize: 10, color: '#16a34a' }}>↑</span>}</td>
+                    <td style={{ padding: '11px 14px', fontFamily: 'monospace' }}>{row.risk}</td>
+                    <td style={{ padding: '11px 14px', fontFamily: 'monospace' }}>{row.supp}</td>
+                    <td style={{ padding: '11px 14px', fontFamily: 'monospace' }}>{row.esg}</td>
+                    <td style={{ padding: '11px 14px', fontFamily: 'monospace', fontWeight: 'bold', color: row.rank === 1 ? '#d97706' : undefined }}>{row.overall}</td>
+                    <td style={{ padding: '11px 14px', fontFamily: 'monospace', fontSize: 11 }}>{row.time}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </SectionCard>
+          <div style={{ ...card(), background: '#fffbeb', borderColor: '#fde68a', marginTop: 14 }}>
+            <div style={{ padding: 16, display: 'flex', alignItems: 'center', gap: 12 }}>
+              <AlertCircle size={20} color="#d97706" style={{ flexShrink: 0 }} />
+              <p style={{ fontSize: 12.5, color: '#92400e', margin: 0 }}><b>Suppliers see only their own overall score and rank</b> — not the individual attribute breakdown, not other suppliers' names or scores. This prevents gaming the scoring model.</p>
+            </div>
+          </div>
+        </div>
+
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
+          <div style={{ background: '#eff6ff', border: '1px solid #dbeafe', borderRadius: 12, padding: 18 }}>
+            <p style={{ fontSize: 13, fontWeight: 600, color: '#1e40af', margin: '0 0 12px' }}>Score simulation</p>
+            <p style={{ fontSize: 12, color: '#1d4ed8', margin: 0 }}>If Deloitte improves commercial score from 76 → 85, their overall moves from 85.8 → 88.5, taking rank 1.</p>
+          </div>
+          <SectionCard title="Auction controls">
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 8, padding: 16 }}>
+              <button style={{ padding: '8px 16px', background: '#fff', color: '#111827', border: '1px solid #e2e8f0', borderRadius: 8, fontSize: 14, fontWeight: 500, cursor: 'pointer' }}>Pause auction</button>
+              <button style={{ padding: '8px 16px', background: '#fef2f2', color: '#b91c1c', border: '1px solid #fecaca', borderRadius: 8, fontSize: 14, fontWeight: 500, cursor: 'pointer' }}>End auction now</button>
+              <button style={{ padding: '8px 16px', background: '#fff', color: '#111827', border: '1px solid #e2e8f0', borderRadius: 8, fontSize: 14, fontWeight: 500, cursor: 'pointer' }}>Send message</button>
+            </div>
+          </SectionCard>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/* ══════════════════════════════════════════════════════════════════════ */
+/*  English Auction Room                                                  */
+/* ══════════════════════════════════════════════════════════════════════ */
+function EnglishRoom() {
+  const rows = [
+    { num: 1, bidder: 'Bidder #7', amount: 'SAR 1,350,000', time: '14:48:32' },
+    { num: 2, bidder: 'Bidder #3', amount: 'SAR 1,300,000', time: '14:47:18' },
+    { num: 3, bidder: 'Bidder #7', amount: 'SAR 1,250,000', time: '14:46:05' },
+    { num: 4, bidder: 'Bidder #11',amount: 'SAR 1,200,000', time: '14:44:50' },
+    { num: 5, bidder: 'Bidder #3', amount: 'SAR 1,150,000', time: '14:43:30' },
+    { num: 6, bidder: 'Bidder #9', amount: 'SAR 1,100,000', time: '14:41:15' },
+    { num: 7, bidder: 'Bidder #2', amount: 'SAR 1,050,000', time: '14:39:02' },
+    { num: 8, bidder: 'Bidder #7', amount: 'SAR 1,000,000', time: '14:37:00' },
+  ];
+
+  return (
+    <div>
+      <div style={{ background: '#1c4532', borderRadius: 12, overflow: 'hidden', marginBottom: 14 }}>
+        <div style={{ padding: '16px 20px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+          <div>
+            <p style={{ fontSize: 14.5, fontWeight: 600, color: '#fff', margin: '0 0 3px' }}>ENG-2025-0003 · Excess IT Assets — Data Centre Hardware Lot</p>
+            <p style={{ fontSize: 12, color: '#6ee7b7', margin: 0 }}>English auction · Price rises · Highest bid wins · 12 registered bidders · Min increment: SAR 50,000</p>
+          </div>
+          <div style={{ textAlign: 'right', flexShrink: 0 }}>
+            <p style={{ fontSize: 26, fontWeight: 300, fontFamily: 'monospace', color: '#fff', margin: 0 }}>00:14:05</p>
+            <p style={{ fontSize: 10.5, color: '#fff', margin: '3px 0 0', letterSpacing: '.03em' }}>REMAINING TIME</p>
+          </div>
+        </div>
+      </div>
+
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 320px', gap: 16 }}>
+        <div>
+          <SectionCard title="Live bid board">
+            <div style={{ textAlign: 'center', padding: '20px 0 24px' }}>
+              <div style={{ fontSize: 12, color: '#6b7280', fontWeight: 500, marginBottom: 8 }}>CURRENT HIGHEST BID</div>
+              <div style={{ fontSize: 40, fontWeight: 300, color: '#15803d', letterSpacing: '-.02em' }}>SAR 1,350,000</div>
+              <div style={{ fontSize: 13, color: '#6b7280', marginTop: 6 }}>Leading: Bidder #7 · Bid placed 14:48:32</div>
+              <div style={{ fontSize: 12, color: '#16a34a', marginTop: 4 }}>↑ SAR 850,000 above reserve · Next min bid: SAR 1,400,000</div>
+            </div>
+            <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 12 }}>
+              <thead><tr><th style={th}>#</th><th style={th}>Bidder</th><th style={th}>Amount</th><th style={th}>Time</th></tr></thead>
+              <tbody>
+                {rows.map(row => (
+                  <tr key={row.num} style={{ borderTop: '1px solid #f1f5f9', background: row.num === 1 ? '#f0fdf4' : undefined }}>
+                    <td style={{ padding: '11px 14px', fontFamily: 'monospace', fontWeight: row.num === 1 ? 'bold' : 'normal', color: row.num === 1 ? '#15803d' : undefined }}>{row.num}</td>
+                    <td style={{ padding: '11px 14px', fontWeight: row.num === 1 ? 'bold' : 'normal' }}>{row.bidder}</td>
+                    <td style={{ padding: '11px 14px', fontFamily: 'monospace', fontWeight: row.num === 1 ? 'bold' : 'normal', color: row.num === 1 ? '#15803d' : undefined }}>{row.amount}</td>
+                    <td style={{ padding: '11px 14px', fontFamily: 'monospace' }}>{row.time}</td>
+                  </tr>
+                ))}
+                <tr style={{ background: '#f8fafc', borderTop: '1px solid #f1f5f9' }}>
+                  <td colSpan={2} style={{ padding: '11px 14px', fontSize: 11, color: '#6b7280' }}>Reserve price</td>
+                  <td colSpan={2} style={{ padding: '11px 14px', fontFamily: 'monospace', fontSize: 11, color: '#6b7280' }}>SAR 500,000</td>
+                </tr>
+              </tbody>
+            </table>
+          </SectionCard>
+        </div>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
+          <SectionCard title="Auction details">
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 10, padding: 16 }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <span style={{ fontSize: 11, color: '#6b7280', textTransform: 'uppercase', letterSpacing: '.4px' }}>Reserve price</span>
+                <span style={{ fontSize: 13.5, fontWeight: 600, color: '#111827' }}>SAR 500,000</span>
+              </div>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <span style={{ fontSize: 11, color: '#6b7280', textTransform: 'uppercase', letterSpacing: '.4px' }}>Opening bid</span>
+                <span style={{ fontSize: 13.5, fontWeight: 600, color: '#111827' }}>SAR 500,000</span>
+              </div>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <span style={{ fontSize: 11, color: '#6b7280', textTransform: 'uppercase', letterSpacing: '.4px' }}>Min increment</span>
+                <span style={{ fontSize: 13.5, fontWeight: 600, color: '#111827' }}>SAR 50,000</span>
+              </div>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <span style={{ fontSize: 11, color: '#6b7280', textTransform: 'uppercase', letterSpacing: '.4px' }}>Registered bidders</span>
+                <span style={{ fontSize: 13.5, fontWeight: 600, color: '#111827' }}>12</span>
+              </div>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <span style={{ fontSize: 11, color: '#6b7280', textTransform: 'uppercase', letterSpacing: '.4px' }}>Active right now</span>
+                <span style={{ fontSize: 13.5, fontWeight: 600, color: '#16a34a' }}>4 bidders</span>
+              </div>
+            </div>
+          </SectionCard>
+          <SectionCard title="Auction controls">
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 8, padding: 16 }}>
+              <button style={{ padding: '8px 16px', background: '#fff', color: '#111827', border: '1px solid #e2e8f0', borderRadius: 8, fontSize: 14, fontWeight: 500, cursor: 'pointer' }}>Pause auction</button>
+              <button style={{ padding: '8px 16px', background: '#fef2f2', color: '#b91c1c', border: '1px solid #fecaca', borderRadius: 8, fontSize: 14, fontWeight: 500, cursor: 'pointer' }}>End auction now</button>
+              <button style={{ padding: '8px 16px', background: '#fff', color: '#111827', border: '1px solid #e2e8f0', borderRadius: 8, fontSize: 14, fontWeight: 500, cursor: 'pointer' }}>Extend by 10 min</button>
+            </div>
+          </SectionCard>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/* ══════════════════════════════════════════════════════════════════════ */
+/*  Dutch Auction Room                                                    */
+/* ══════════════════════════════════════════════════════════════════════ */
+function DutchRoom() {
+  return (
+    <div>
+      <div style={{ background: '#7c3aed', borderRadius: 12, overflow: 'hidden', marginBottom: 14 }}>
+        <div style={{ padding: '16px 20px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+          <div>
+            <p style={{ fontSize: 14.5, fontWeight: 600, color: '#fff', margin: '0 0 3px' }}>DUTCH-2025-0001 · Treasury Bills — SAR 500M Issuance</p>
+            <p style={{ fontSize: 12, color: '#ddd6fe', margin: 0 }}>Dutch auction · Price drops automatically every 30 seconds · First to accept wins · 8 registered institutions</p>
+          </div>
+          <div style={{ textAlign: 'right', flexShrink: 0 }}>
+            <p style={{ fontSize: 26, fontWeight: 300, fontFamily: 'monospace', color: '#fff', margin: 0 }}>00:18</p>
+            <p style={{ fontSize: 10.5, color: '#ddd6fe', margin: '3px 0 0', letterSpacing: '.03em' }}>UNTIL NEXT DROP</p>
+          </div>
+        </div>
+      </div>
+
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 300px', gap: 16 }}>
+        <SectionCard title="Price clock">
+          <div style={{ textAlign: 'center', padding: '24px 0' }}>
+            <div style={{ fontSize: 12, color: '#6b7280', fontWeight: 500, marginBottom: 10 }}>CURRENT PRICE</div>
+            <div style={{ fontSize: 52, fontWeight: 300, color: '#7c3aed', letterSpacing: '-.02em', lineHeight: 1 }}>SAR 4,200,000</div>
+            <div style={{ fontSize: 13, color: '#6b7280', marginTop: 8 }}>↓ Dropping from SAR 5,000,000 · Next: SAR 4,150,000 in 18 seconds</div>
+
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 12, marginTop: 24, textAlign: 'left', padding: '0 24px' }}>
+              <div style={{ background: '#fff', border: '1px solid #e2e8f0', borderRadius: 12, padding: 16 }}>
+                <div style={{ fontSize: 12, color: '#6b7280', fontWeight: 500, marginBottom: 8 }}>Opening price</div>
+                <div style={{ fontSize: 16, color: '#111827' }}>SAR 5,000,000</div>
+              </div>
+              <div style={{ background: '#fff', border: '1px solid #e2e8f0', borderRadius: 12, padding: 16 }}>
+                <div style={{ fontSize: 12, color: '#6b7280', fontWeight: 500, marginBottom: 8 }}>Current price</div>
+                <div style={{ fontSize: 16, color: '#7c3aed' }}>SAR 4,200,000</div>
+              </div>
+              <div style={{ background: '#fff', border: '1px solid #e2e8f0', borderRadius: 12, padding: 16 }}>
+                <div style={{ fontSize: 12, color: '#6b7280', fontWeight: 500, marginBottom: 8 }}>Floor price</div>
+                <div style={{ fontSize: 16, color: '#111827' }}>SAR 3,000,000</div>
+              </div>
+            </div>
+
+            <div style={{ marginTop: 20 }}>
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6, marginBottom: 10 }}>
+                <div style={{ width: 10, height: 10, background: '#e2e8f0', borderRadius: 1 }}></div>
+                <div style={{ fontSize: 11, color: '#6b7280' }}>Price drop history</div>
+              </div>
+              <div style={{ display: 'flex', alignItems: 'flex-end', gap: 4, height: 50, justifyContent: 'center' }}>
+                <div style={{ width: 22, background: '#7c3aed', height: '100%', opacity: .9, borderRadius: '2px 2px 0 0' }}></div>
+                <div style={{ width: 22, background: '#7c3aed', height: '90%', opacity: .85, borderRadius: '2px 2px 0 0' }}></div>
+                <div style={{ width: 22, background: '#7c3aed', height: '80%', opacity: .8, borderRadius: '2px 2px 0 0' }}></div>
+                <div style={{ width: 22, background: '#7c3aed', height: '70%', opacity: .75, borderRadius: '2px 2px 0 0' }}></div>
+                <div style={{ width: 22, background: '#7c3aed', height: '60%', opacity: .7, borderRadius: '2px 2px 0 0' }}></div>
+                <div style={{ width: 22, background: '#7c3aed', height: '50%', opacity: .65, borderRadius: '2px 2px 0 0' }}></div>
+                <div style={{ width: 22, background: '#7c3aed', height: '42%', opacity: .6, borderRadius: '2px 2px 0 0', border: '2px solid #7c3aed', position: 'relative' }}>
+                  <div style={{ position: 'absolute', top: -20, left: '50%', transform: 'translateX(-50%)', fontSize: 9, color: '#7c3aed', whiteSpace: 'nowrap', fontWeight: 600 }}>NOW</div>
+                </div>
+                <div style={{ width: 22, background: '#e2e8f0', height: '35%', borderRadius: '2px 2px 0 0' }}></div>
+                <div style={{ width: 22, background: '#e2e8f0', height: '28%', borderRadius: '2px 2px 0 0' }}></div>
+                <div style={{ width: 22, background: '#fee2e2', height: '20%', borderRadius: '2px 2px 0 0', borderTop: '1.5px dashed #f87171' }}></div>
+              </div>
+              <div style={{ fontSize: 10, color: '#9ca3af', marginTop: 4, textAlign: 'center' }}>5.0M · · · · · · 4.2M (now) · · · 3.0M (floor)</div>
+            </div>
+          </div>
+          <div style={{ background: '#faf5ff', border: '1px solid #e9d5ff', borderRadius: 12, padding: 14, textAlign: 'center', margin: '0 24px 24px' }}>
+            <div style={{ fontSize: 12, color: '#6d28d9', marginBottom: 6 }}>Any institution can accept the current price at any moment</div>
+            <button onClick={() => alert('DUTCH-2025-0001 accepted at SAR 4,200,000 by Institution #3\n\nAuction ended 14:49:18. Award initiated.')} style={{ background: '#7c3aed', color: '#fff', width: '100%', justifyContent: 'center', fontSize: 15, padding: '10px 22px', border: 'none', borderRadius: 12, fontWeight: 500, cursor: 'pointer' }}>Accept SAR 4,200,000 →</button>
+          </div>
+        </SectionCard>
+
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
+          <SectionCard title="Registered institutions">
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 8, padding: 16 }}>
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', fontSize: 12.5, padding: '5px 0', borderBottom: '1px solid #f1f5f9' }}>
+                <span>National Commercial Bank</span><span style={{ color: '#16a34a', fontWeight: 600, fontSize: 11 }}>● Watching</span>
+              </div>
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', fontSize: 12.5, padding: '5px 0', borderBottom: '1px solid #f1f5f9' }}>
+                <span>Saudi Fransi Capital</span><span style={{ color: '#16a34a', fontWeight: 600, fontSize: 11 }}>● Watching</span>
+              </div>
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', fontSize: 12.5, padding: '5px 0', borderBottom: '1px solid #f1f5f9' }}>
+                <span>Riyad Bank</span><span style={{ color: '#16a34a', fontWeight: 600, fontSize: 11 }}>● Watching</span>
+              </div>
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', fontSize: 12.5, padding: '5px 0' }}>
+                <span>+5 institutions</span><span style={{ color: '#6b7280', fontSize: 11 }}>Connected</span>
+              </div>
+            </div>
+          </SectionCard>
+          <SectionCard title="Host controls">
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 8, padding: 16 }}>
+              <button style={{ padding: '8px 16px', background: '#fff', color: '#111827', border: '1px solid #e2e8f0', borderRadius: 8, fontSize: 14, fontWeight: 500, cursor: 'pointer' }}>Pause price drop</button>
+              <button style={{ padding: '8px 16px', background: '#fef2f2', color: '#b91c1c', border: '1px solid #fecaca', borderRadius: 8, fontSize: 14, fontWeight: 500, cursor: 'pointer' }}>Withdraw auction</button>
+              <button style={{ padding: '8px 16px', background: '#fff', color: '#111827', border: '1px solid #e2e8f0', borderRadius: 8, fontSize: 14, fontWeight: 500, cursor: 'pointer' }}>Adjust drop interval</button>
+            </div>
+          </SectionCard>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/* ══════════════════════════════════════════════════════════════════════ */
 /*  Shell                                                                  */
 /* ══════════════════════════════════════════════════════════════════════ */
 export default function LiveAuctionRoom({ onNavigate }: Props) {
@@ -608,6 +1006,10 @@ export default function LiveAuctionRoom({ onNavigate }: Props) {
         {activeRoom === 'hybrid'      && <HybridRoom />}
         {activeRoom === 'negotiation' && <NegotiationRoom />}
         {activeRoom === 'bafo'        && <BafoRoom />}
+        {activeRoom === 'two-envelope'&& <TwoEnvelopeRoom />}
+        {activeRoom === 'multi-attribute'&& <MultiAttributeRoom />}
+        {activeRoom === 'english'     && <EnglishRoom />}
+        {activeRoom === 'dutch'       && <DutchRoom />}
       </div>
     </div>
   );

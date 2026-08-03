@@ -2043,6 +2043,7 @@ const CANONICAL_PATH_BY_VIEW: Record<AppView, string> = {
 // still opens the existing per-auction AuctionDetail view.
 const VIEW_BY_PATH: Record<string, AppView> = {
   '/': 'dashboard',
+  '/dashboard': 'dashboard',
   '/ebid-list': 'ebid-list',
   '/create': 'create',
   '/live-auction-room': 'live-room',

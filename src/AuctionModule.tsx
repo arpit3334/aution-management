@@ -2022,7 +2022,7 @@ const NAV_ITEMS: NavItem[] = [
 // without one clobbering the other's URL.
 const CANONICAL_PATH_BY_VIEW: Record<AppView, string> = {
   'dashboard': '/',
-  'create': '/create',
+  'create': '/ebid-create',
   'detail': '/live-auction-room',
   'vendor-portal': '/vendor-portal',
   'vendor-submit': '/vendor-submit',
@@ -2045,7 +2045,7 @@ const VIEW_BY_PATH: Record<string, AppView> = {
   '/': 'dashboard',
   '/dashboard': 'dashboard',
   '/ebid-list': 'ebid-list',
-  '/create': 'create',
+  '/ebid-create': 'create',
   '/live-auction-room': 'live-room',
   '/compare-bids': 'compare-bids',
   '/vendor-portal': 'vendor-portal',
@@ -2159,7 +2159,7 @@ export default function AuctionModule() {
     // trust the caller's object as navData for the 'detail' view, we only
     // use it to find the auction's id, then re-resolve the real record via
     // resolveNavDataForView so AuctionDetail always gets the right shape.
-    if (v === 'ebid-create') { pushPath('/create'); if (d !== undefined) setNavData(d); return; }
+    if (v === 'ebid-create') { pushPath('/ebid-create'); if (d !== undefined) setNavData(d); return; }
     if (v === 'live-auction-room') { pushPath('/live-auction-room'); if (d !== undefined) setNavData(d); return; }
     if (v === 'ebid-detail') {
       // A specific auction (id/auctionId present) opens the per-auction

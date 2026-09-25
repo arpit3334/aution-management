@@ -16,7 +16,7 @@ export function Sidebar() {
 
   const NAV_ITEMS = [
     { label: 'Dashboard', href: '/dashboard', icon: LayoutGrid, count: 2 },
-    { label: 'Auction', href: '/create', icon: PlusCircle }, 
+    { label: 'Auction', href: '/ebid-create', icon: PlusCircle }, 
     { label: 'Live auction', href: '/live-auction-room', icon: Radio, badge: 'Live' },
     { label: 'Compare bids', href: '/ebid-list', icon: GitCompare }, 
     { label: 'Reports', href: '/auction-reports', icon: FileText },

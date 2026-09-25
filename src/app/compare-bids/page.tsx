@@ -12,7 +12,7 @@ export default function CompareBidsPage() {
     } else if (view === 'reports' || view === 'auction-reports') {
       router.push('/auction-reports');
     } else if (view === 'create' || view === 'ebid-create') {
-      router.push('/create');
+      router.push('/ebid-create');
     } else if (view === 'live-auction-room') {
       router.push('/live-auction-room');
     } else if (view === 'dashboard') {

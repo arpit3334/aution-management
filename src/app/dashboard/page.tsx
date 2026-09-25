@@ -16,7 +16,7 @@ export default function DashboardPage() {
     } else if (view === 'reports' || view === 'auction-reports') {
       router.push('/auction-reports');
     } else if (view === 'create' || view === 'ebid-create') {
-      router.push('/create');
+      router.push('/ebid-create');
     } else if (view === 'questionnaire-templates' || view === 'templates') {
       router.push('/questionnaire-templates');
     } else if (view === 'vendor-submit') {
